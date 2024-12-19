@@ -1,7 +1,7 @@
 # BWA rowdfunding
 
 ## Description
-This project is based on the **Build with Angga** learning flow, enhanced with custom improvisations. It involves developing a full-stack web application with a Vue.js-based front-end, a Golang-based back-end, and a PostgreSQL database.
+This project is based on the **Build with Angga** learning flow, enhanced with custom improvisations. It involves developing a full-stack web application with a Vue.js-based front-end, a Golang-based back-end, and a MySQL database.
 
 ### **Learning Flow**
 1. **Slicing HTML to Vue Template**  
@@ -23,7 +23,7 @@ This project is based on the **Build with Angga** learning flow, enhanced with c
 - **Vue.js**: For creating modular UI components.  
 - **Golang**: For building the back-end API.  
 - **NuxtJS**: For creating a modern and SEO-friendly front-end application.  
-- **PostgreSQL**: As the database solution.
+- **MySQL**: As the database solution.
 
 ---
 
@@ -39,7 +39,7 @@ This project is based on the **Build with Angga** learning flow, enhanced with c
    Required for running the Golang backend container.
 
 4. **Database**  
-   The project uses **PostgreSQL** as the database, managed through Docker.
+   The project uses **MySQL** as the database, managed through Docker.
 
 ---
 
