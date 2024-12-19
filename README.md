@@ -46,5 +46,5 @@ This project is based on the **Build with Angga** learning flow, enhanced with c
 ## How to Run the Project with Docker
 1. Clone the repository:
    ```bash
-   git clone https://github.com/username/project-name.git
-   cd project-name
+   git clone https://github.com/fauzan264/crowdfunding.git
+   cd crowdfunding
