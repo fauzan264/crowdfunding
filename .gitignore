@@ -1,1 +1,24 @@
+# Go binaries
+/bin/
+/obj/
+/*.exe
+/*.out
+/*.a
+
+# Go workspace file
+go.work
+go.work.sum
+
+# Vendor directory (if not using vendoring)
+vendor/
+
+# .env files
 .env
+
+# OS or editor specific files
+.DS_Store
+.idea/
+.vscode/
+
+# Logs
+*.log
