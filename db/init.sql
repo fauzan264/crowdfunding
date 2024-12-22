@@ -1,64 +1,64 @@
-CREATE DATABASE bwastartup;
+CREATE DATABASE IF NOT EXISTS bwastartup;
 
 USE bwastartup;
 
-CREATE TABLE users(
-    id varchar(36) primary key not null,
-    name varchar(100) not null,
-    occupation varchar(100) not null,
-    email varchar(100) not null unique,
-    password varchar(255) not null,
-    avatar_file_name varchar(255) not null,
-    role varchar(255) not null,
-    created_by varchar(36) not null default '00000000-0000-0000-0000-000000000000',
-    created_at datetime not null default now(),
-    updated_by varchar(36) not null default '00000000-0000-0000-0000-000000000000',
-    updated_at datetime not null default now()
+CREATE TABLE IF NOT EXISTS users(
+    id CHAR(36) PRIMARY KEY NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    occupation VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    avatar_file_name VARCHAR(255) NOT NULL,
+    role VARCHAR(255) NOT NULL,
+    created_by CHAR(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_by CHAR(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE campaigns(
-    id varchar(36) not null primary key,
-    user_id varchar(36) not null,
-    title varchar(255) not null,
-    short_description varchar(100) not null,
-    description text,
-    goal_amount int UNSIGNED,
-    current_amount int UNSIGNED,
-    perks text,
-    becker_count int,
-    slug varchar(255),
-    created_by varchar(36) not null default '00000000-0000-0000-0000-000000000000',
-    created_at datetime not null default now(),
-    updated_by varchar(36) not null default '00000000-0000-0000-0000-000000000000',
-    updated_at datetime not null default now()
+CREATE TABLE IF NOT EXISTS campaigns(
+    id CHAR(36) NOT NULL PRIMARY KEY,
+    user_id CHAR(36) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    short_description VARCHAR(100) NOT NULL,
+    description TEXT,
+    goal_amount INT UNSIGNED,
+    current_amount INT UNSIGNED,
+    perks TEXT,
+    becker_count INT,
+    slug VARCHAR(255),
+    created_by CHAR(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_by CHAR(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE campaign_images(
-    id varchar(36) not null primary key,
-    campaign_id varchar(36) not null,
-    file_name varchar(255) not null,
-    is_primary tinyint unsigned not null,
-    created_by varchar(36) not null default '00000000-0000-0000-0000-000000000000',
-    created_at datetime not null default now(),
-    updated_by varchar(36) not null default '00000000-0000-0000-0000-000000000000',
-    updated_at datetime not null default now()
+CREATE TABLE IF NOT EXISTS campaign_images(
+    id CHAR(36) NOT NULL PRIMARY KEY,
+    campaign_id CHAR(36) NOT NULL,
+    file_name VARCHAR(255) NOT NULL,
+    is_primary TINYINT(1) UNSIGNED NOT NULL,
+    created_by CHAR(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_by CHAR(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE transactions(
-    id varchar(36) not null,
-    user_id varchar(36) not null,
-    campaign_id varchar(36) not null,
-    amount int unsigned not null,
-    status varchar(50) not null,
-    code varchar(50) not null,
-    created_by varchar(36) not null default '00000000-0000-0000-0000-000000000000',
-    created_at datetime not null default now(),
-    updated_by varchar(36) not null default '00000000-0000-0000-0000-000000000000',
-    updated_at datetime not null default now()
+CREATE TABLE IF NOT EXISTS transactions(
+    id CHAR(36) NOT NULL,
+    user_id CHAR(36) NOT NULL,
+    campaign_id CHAR(36) NOT NULL,
+    amount INT UNSIGNED NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    code VARCHAR(50) NOT NULL,
+    created_by CHAR(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_by CHAR(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE status_transaction(
-    name varchar(50) PRIMARY KEY
+CREATE TABLE IF NOT EXISTS status_transaction(
+    name VARCHAR(50) PRIMARY KEY
 );
 
 INSERT INTO status_transaction VALUES
