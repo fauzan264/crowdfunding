@@ -1,0 +1,54 @@
+package user
+
+import (
+	"fmt"
+	"time"
+
+	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
+)
+
+type Service interface {
+	RegisterUser(input RegisterUserInput) (User, error)
+}
+
+type service struct {
+	repository Repository
+}
+
+func NewService(repository Repository) *service {
+	return &service{repository}
+}
+
+func(s *service) RegisterUser(input RegisterUserInput) (User, error) {
+	user := User{}
+	user.ID = uuid.New()
+	user.Name = input.Name
+	user.Email = input.Email
+	user.Occupation = input.Occupation
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
+	if err != nil {
+		return user, err
+	}
+
+	user.Password = string(passwordHash)
+	user.AvatarFileName = "images.jpg"
+	user.Role = "user"
+
+	userCreated, err := uuid.Parse("00000000-0000-0000-0000-000000000000")
+	if err != nil {
+		fmt.Printf("Error parsing UUID: %v\n", err)
+		return user, err
+	}
+
+	user.CreatedBy = userCreated
+	user.CreatedAt = time.Now()
+
+
+	newUser, err := s.repository.Save(user)
+	if err != nil {
+		return newUser, err
+	}
+
+	return newUser, nil
+}
