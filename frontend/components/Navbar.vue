@@ -1,7 +1,7 @@
 <template>
     <header class="flex items-center">
         <div class="pr-5" style="height: 54;">
-            <img src="/logo" alt="logo" class="h-full" />
+            <img src="/logo.svg" alt="logo" class="h-full" />
         </div>
         <ul class="flex items-center">
             <li>
@@ -12,7 +12,7 @@
             </li>
             <li>
                 <nuxt-link
-                    to="projects"
+                    to="/projects"
                     class="text-white hover:text-teal-500 text-lg px-4 py-3"
                 ></nuxt-link>
             </li>
