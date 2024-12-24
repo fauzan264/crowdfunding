@@ -2,15 +2,6 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
-  postcss: {
-    plugins: {
-      tailwindcss: {},
-      autoprefixer: {},
-    },
-  },
-  css: [
-    '@/assets/css/tailwind.css', // Add your Tailwind CSS here
-  ],
   app: {
     head: {
       title: 'Build With Angga - Crowdfunding App',
@@ -30,4 +21,14 @@ export default defineNuxtConfig({
       script: [],
     },
   },
+  css: [
+    '@/assets/css/tailwind.css', // Add your Tailwind CSS here
+  ],  
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
+  pages: true,
 })
