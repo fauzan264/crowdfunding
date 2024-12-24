@@ -13,6 +13,8 @@ export default {
     './components/**/*.{vue,js,ts}',
     './layouts/**/*.{vue,js,ts}',
     './plugins/**/*.{js,ts}', // If you have any plugins
+    './app.vue',
+    './error.vue',
     './nuxt.config.{js,ts}' // Include Nuxt config if using Tailwind in it
   ],
   theme: {
@@ -20,7 +22,7 @@ export default {
       boxShadow: {
         outline: "0 0 0 1px rgba(66, 153, 225, .5)",
       },
-      color: {
+      colors: {
         "orange-button": "#FF872E",
         "green-button": "#1ABC9C",
         "purple-hover": "#4C52F8",
@@ -28,7 +30,7 @@ export default {
         "purple-progress": "#3B41E3",
       },
       borderRadius: {
-        20: "20px",
+        '20': "20px",
       }
     },
   },
