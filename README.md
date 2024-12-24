@@ -1,4 +1,4 @@
-# BWA rowdfunding
+# BWA Crowdfunding
 
 ## Description
 This project is based on the **Build with Angga** learning flow, enhanced with custom improvisations. It involves developing a full-stack web application with a Vue.js-based front-end, a Golang-based back-end, and a MySQL database.
