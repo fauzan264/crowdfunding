@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/fauzan264/crowdfunding/backend/handler"
+	"github.com/fauzan264/crowdfunding/backend/helper"
 	"github.com/fauzan264/crowdfunding/backend/user"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -21,11 +21,13 @@ func main() {
 	}
 
 	var(
-		DbUser = os.Getenv("DB_USER")
-		DbPassword = os.Getenv("DB_PASSWORD")
+		DbHost = helper.GetEnv("DB_HOST", "db")
+		DBPort = helper. GetEnv("DB_PORT", "3306")
+		DbUser = helper.GetEnv("DB_USER", "root")
+		DbPassword = helper.GetEnv("DB_PASSWORD", "root")
 	)
 
-	dsn := fmt.Sprintf("%s:%s@tcp(db:3306)/bwastartup?charset=utf8mb4&parseTime=True&loc=Local", DbUser, DbPassword)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/bwastartup?charset=utf8mb4&parseTime=True&loc=Local", DbUser, DbPassword, DbHost, DBPort)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err.Error())
