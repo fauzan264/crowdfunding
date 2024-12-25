@@ -23,20 +23,10 @@ func main() {
 	var(
 		DbUser = os.Getenv("DB_USER")
 		DbPassword = os.Getenv("DB_PASSWORD")
-		DbHost = os.Getenv("DB_HOST")
-		DbPort = os.Getenv("DB_PORT")
-		DbName = os.Getenv("DB_NAME")
 	)
 
-	fmt.Println(DbUser)
-	fmt.Println(DbPassword)
-	fmt.Println(DbHost)
-	fmt.Println(DbPort)
-	fmt.Println(DbName)
-
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", DbUser, DbPassword, DbHost, DbPort, DbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(db:3306)/bwastartup?charset=utf8mb4&parseTime=True&loc=Local", DbUser, DbPassword)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	log.Println(dsn)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -52,18 +42,6 @@ func main() {
 	api.POST("/users", userHandler.RegisterUser)
 	
 	router.Run()
-	// userInput := user.RegisterUserInput{}
-	// userInput.Name = "ahmad264"
-	// userInput.Email = "ahmad264@mail.com"
-	// userInput.Occupation = "golang developer"
-	// userInput.Password = "password"
-
-	// userService.RegisterUser(userInput)
-
-	// userRepository.Save(user)
-	// router := gin.Default()
-	// router.GET("/handler", handler)
-	// router.Run()
 }
 
 // input dari user, ini isinya cuma struct input
