@@ -42,11 +42,7 @@ func main() {
 	api := router.Group("/api/v1")
 
 	api.POST("/users", userHandler.RegisterUser)
-	
+	api.POST("/sessions", userHandler.Login)
+
 	router.Run()
 }
-
-// input dari user, ini isinya cuma struct input
-// handler -> menangkap input user, mapping ke object go(struct) -> logic/controller
-// service -> mengambil object mapping ke struct user/entity
-// repository, save struct user ke db -> db

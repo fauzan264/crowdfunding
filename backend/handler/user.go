@@ -17,9 +17,6 @@ func NewUserHandler(userService user.Service) *userHandler {
 }
 
 func (handler *userHandler) RegisterUser(c *gin.Context) {
-	// tangkap input dari user
-	// map input dari user ke struct RegisterUserInput
-	// struct di atas kita parsing sebagai parameter service
 	var input user.RegisterUserInput
 
 	err := c.ShouldBindJSON(&input)
@@ -34,10 +31,9 @@ func (handler *userHandler) RegisterUser(c *gin.Context) {
 
 	newUser, err := handler.userService.RegisterUser(input)
 	if err != nil {
-		// errors := helper.FormatValidationError(err)
-		// errorMessage := gin.H{"errors": errors}
+		errorMessage := gin.H{"errors": err.Error()}
 
-		response := helper.APIResponse("Register account failed", http.StatusBadRequest, "error", err.Error())
+		response := helper.APIResponse("Register account failed", http.StatusBadRequest, "error", errorMessage)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -46,4 +42,33 @@ func (handler *userHandler) RegisterUser(c *gin.Context) {
 
 	response := helper.APIResponse("Account has been registered", http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
+}
+
+func (handler *userHandler) Login(c *gin.Context) {
+	var input user.LoginInput
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.APIResponse("Login failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	loginUser, err := handler.userService.Login(input)
+	if err != nil {
+		errorMessage := gin.H{"errors": err.Error()}
+
+		response := helper.APIResponse("Login failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	formatter := user.FormatUser(loginUser, "tokentokentoken")
+
+	response := helper.APIResponse("Successfully login", http.StatusOK, "success", formatter)
+	c.JSON(http.StatusOK, response)
+	return
 }
