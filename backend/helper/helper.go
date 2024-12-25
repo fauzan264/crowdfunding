@@ -1,6 +1,10 @@
 package helper
 
-import "github.com/go-playground/validator/v10"
+import (
+	"os"
+
+	"github.com/go-playground/validator/v10"
+)
 
 type Response struct {
 	Meta Meta `json:"meta"`
@@ -36,4 +40,12 @@ func FormatValidationError(err error) []string {
 	}
 
 	return errors
+}
+
+func GetEnv(key, defaultValue string) string {
+	value := os.Getenv(key)
+	if value == "" {
+		value = defaultValue
+	}
+	return value
 }
