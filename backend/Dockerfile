@@ -1,21 +1,38 @@
-FROM golang:1.20-alpine
-
-# Define build arguments
-ARG DB_USER
-ARG DB_PASSWORD
-ARG DB_NAME
-
-# working directory
+# Build Stage
+FROM golang:1.22.4-alpine AS builder
 WORKDIR /app
-COPY go.mod go.sum ./
 
-# download go dependencies
+# Install bash and any other dependencies
+RUN apk add --no-cache bash
+
+# Copy go.mod and go.sum files
+COPY go.mod go.sum ./
 RUN go mod download
 
-# copy the entire backend project into the container
-COPY . .
+# Copy the source code and wait-for-it script
+COPY . ./
+COPY wait-for-it.sh /app/wait-for-it.sh  
+# Ensure the script is copied into the container
+
+RUN go build -o main .
+
+# Runtime Stage
+FROM alpine:latest
+WORKDIR /root/
+
+# Install bash (since we need bash in the runtime container)
+RUN apk add --no-cache bash
+
+# Copy the backend binary and .env file
+COPY --from=builder /app/main .
+COPY --from=builder /app/.env .env
+
+# Copy the wait-for-it script from the builder stage
+COPY --from=builder /app/wait-for-it.sh /app/wait-for-it.sh
+RUN chmod +x /app/wait-for-it.sh 
+# Ensure the script is executable
 
 EXPOSE 8080
 
-# command to run the application in production mode
-CMD ["sh", "-c", "migrate -path ./migrations -database mysql://${DB_USER}:${DB_PASSWORD}@tcp(db:3306)/${DB_NAME} up && ./main"]
+# Run wait-for-it before starting the backend
+CMD ["/app/wait-for-it.sh", "db:3306", "--", "./main"]
