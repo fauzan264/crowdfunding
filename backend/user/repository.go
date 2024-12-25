@@ -30,7 +30,7 @@ func (r *repository) Save(user User) (User, error) {
 func (r *repository) FindByEmail(email string) (User, error) {
 	var user User
 	result := r.db.Where("email = ?", email).Find(&user)
-	
+
 	if result.RowsAffected == 0 {
 		return user, errors.New("User Not Found")
 	}
@@ -40,8 +40,4 @@ func (r *repository) FindByEmail(email string) (User, error) {
 	}
 
 	return user, nil
-	// if err != nil {
-	// 	return user, err
-	// }
-	// return user, nil
 }

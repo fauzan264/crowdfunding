@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"errors"
+	"log"
 	"net/http"
 
 	"github.com/fauzan264/crowdfunding/backend/helper"
@@ -69,6 +71,45 @@ func (handler *userHandler) Login(c *gin.Context) {
 	formatter := user.FormatUser(loginUser, "tokentokentoken")
 
 	response := helper.APIResponse("Successfully login", http.StatusOK, "success", formatter)
+	c.JSON(http.StatusOK, response)
+	return
+}
+
+func (handler *userHandler) CheckEmailAvailibility(c *gin.Context) {
+	var input user.CheckEmailInput
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.APIResponse("Email checking failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	checkEmail, err := handler.userService.IsEmailAvailable(input)
+	dataResponse := gin.H{
+		"is_available": checkEmail,
+	}
+
+	var userNotFound = errors.New("User Not Found")
+	if err != nil {
+		if err.Error() == userNotFound.Error() {
+			log.Println(err)
+			response := helper.APIResponse("Email is available", http.StatusOK, "success", dataResponse)
+			c.JSON(http.StatusOK, response)
+			return
+
+		}
+
+		errorMessage := gin.H{"errors": "Server error"}
+		response := helper.APIResponse("Email checking failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	response := helper.APIResponse("Email has been registered", http.StatusOK, "success", dataResponse)
 	c.JSON(http.StatusOK, response)
 	return
 }
