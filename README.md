@@ -20,31 +20,60 @@ This project is based on the **Build with Angga** learning flow, enhanced with c
 
 ## Technologies Used
 - **HTML/CSS**: For slicing and styling the front-end layout.  
-- **Vue.js**: For creating modular UI components.  
-- **Golang**: For building the back-end API.  
-- **NuxtJS**: For creating a modern and SEO-friendly front-end application.  
-- **MySQL**: As the database solution.
+- **Vue.js**: Version `3.5.13` for creating modular UI components.  
+- **Golang**: Version `1.22.4` for building the back-end API.  
+- **NuxtJS**: Version `3.14.1592` for creating a modern and SEO-friendly front-end application.  
+- **MySQL**: Version `8.0` as the database solution.  
 
 ---
 
 ## Project Requirements
 ### **Software Requirements**
 1. **Docker & Docker Compose**  
-   Docker and Docker Compose are used to containerize the services for easier development and deployment.
+   - Docker is used to containerize the services for easier development and deployment.
 
-2. **Node.js** (v16.x or later)  
-   Required for running the NuxtJS frontend container.
+2. **Node.js** (v18.x or later)  
+   - Required for running the NuxtJS frontend container.
 
-3. **Go** (v1.20 or later)  
-   Required for running the Golang backend container.
+3. **Go** (v1.22.4 or later)  
+   - Required for running the Golang backend container.
 
 4. **Database**  
-   The project uses **MySQL** as the database, managed through Docker.
+   - The project uses **MySQL 8.0**, managed through Docker.
 
 ---
 
 ## How to Run the Project with Docker
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/fauzan264/crowdfunding.git
-   cd crowdfunding
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/fauzan264/crowdfunding.git
+cd crowdfunding
+```
+
+### 2. Create Environment Files
+- Create a `.env` file in the **root directory** by copying the example file:
+```bash
+cp .env-example .env
+```
+- Do the same for the backend directory:
+```bash
+cp  backend/.env-example backend/.env
+```
+
+### 3. Start Docker
+Ensure Docker is installed and running, then execute the following command:
+```bash
+docker-compose up --build
+```
+
+### 4. Wait for the Setup to Complete
+Docker will handle the following:
+- Downloading the necessary images
+- Building the containers
+- Starting the services
+This process might take a few minutes. Once completed, the application will be ready to use.
+
+### 5. Access the Application
+- Frontend: Open your browser and navigate to http://localhost:3000.
+- Backend API: Access the API at http://localhost:8080.
