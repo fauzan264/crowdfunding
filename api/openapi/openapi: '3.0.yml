@@ -1,0 +1,217 @@
+openapi: '3.0.3'
+info:
+  title: API Crowdfunding
+  version: '1.0'
+servers:
+  - url: http://localhost:8080/api/v1
+paths:
+  /users:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                occupation:
+                  type: string
+                  default: unemployed laid off
+                email:
+                  type: string
+                  format: email
+                  default: pengembara_langit@mail.com
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Account has been registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: "#/components/schemas/MetaResponse"
+                  data:
+                    $ref: "#/components/schemas/DataUserResponse"
+        '422':
+          description: The data you sent is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrors"
+
+  /sessions:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  default: pengembara_langit@mail.com
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: "#/components/schemas/MetaResponse"
+                  data:
+                    $ref: "#/components/schemas/DataUserResponse"
+        '401':
+          description: Invalid credentials.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: "#/components/schemas/MetaResponse"
+                  data:
+                    $ref: "#/components/schemas/ErrorResponse"
+                  
+        '422':
+          description: The data you sent is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrors"
+          
+  /email_checkers:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  default: pengembara_langit@mail.com
+      responses:
+        '200':
+          description: Email is available/Email has been registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: "#/components/schemas/MetaResponse"
+                  data:
+                    type: object
+                    properties:
+                      is_available:
+                        type: boolean
+        '422':
+          description: The data you sent is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrors"
+
+  /avatars:
+    post:
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Avatar successfully uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: "#/components/schemas/MetaResponse"
+                  data:
+                    type: object
+                    properties:
+                      is_uploaded:
+                        type: boolean
+                        default: true
+        '400':
+          description: Failed to upload avatar image
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: "#/components/schemas/MetaResponse"
+                  data:
+                    type: object
+                    properties:
+                      is_uploaded:
+                        type: boolean
+                        default: false
+        '422':
+          description: The data you sent is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrors"
+components:
+  schemas:
+    ValidationErrors:
+      type: object
+      properties:
+        meta:
+          $ref: "#/components/schemas/MetaResponse"
+        data:
+          $ref: "#/components/schemas/ErrorResponse"
+    MetaResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+        status:
+          type: string
+    DataUserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        occupation:
+          type: string
+        email:
+          type: string
+          format: email
+        token:
+          type: string
+          format: jwt
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
+            default: "Key: 'CheckEmailInput.Email' Error:Field validation for 'Email' failed on the 'required' tag"
