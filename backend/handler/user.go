@@ -2,12 +2,14 @@ package handler
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/fauzan264/crowdfunding/backend/helper"
 	"github.com/fauzan264/crowdfunding/backend/user"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type userHandler struct {
@@ -18,7 +20,7 @@ func NewUserHandler(userService user.Service) *userHandler {
 	return &userHandler{userService}
 }
 
-func (handler *userHandler) RegisterUser(c *gin.Context) {
+func (h *userHandler) RegisterUser(c *gin.Context) {
 	var input user.RegisterUserInput
 
 	err := c.ShouldBindJSON(&input)
@@ -31,7 +33,7 @@ func (handler *userHandler) RegisterUser(c *gin.Context) {
 		return
 	}
 
-	newUser, err := handler.userService.RegisterUser(input)
+	newUser, err := h.userService.RegisterUser(input)
 	if err != nil {
 		errorMessage := gin.H{"errors": err.Error()}
 
@@ -46,7 +48,7 @@ func (handler *userHandler) RegisterUser(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func (handler *userHandler) Login(c *gin.Context) {
+func (h *userHandler) Login(c *gin.Context) {
 	var input user.LoginInput
 
 	err := c.ShouldBindJSON(&input)
@@ -59,7 +61,7 @@ func (handler *userHandler) Login(c *gin.Context) {
 		return
 	}
 
-	loginUser, err := handler.userService.Login(input)
+	loginUser, err := h.userService.Login(input)
 	if err != nil {
 		errorMessage := gin.H{"errors": err.Error()}
 
@@ -75,7 +77,7 @@ func (handler *userHandler) Login(c *gin.Context) {
 	return
 }
 
-func (handler *userHandler) CheckEmailAvailibility(c *gin.Context) {
+func (h *userHandler) CheckEmailAvailibility(c *gin.Context) {
 	var input user.CheckEmailInput
 
 	err := c.ShouldBindJSON(&input)
@@ -88,7 +90,7 @@ func (handler *userHandler) CheckEmailAvailibility(c *gin.Context) {
 		return
 	}
 
-	checkEmail, err := handler.userService.IsEmailAvailable(input)
+	checkEmail, err := h.userService.IsEmailAvailable(input)
 	dataResponse := gin.H{
 		"is_available": checkEmail,
 	}
@@ -110,6 +112,44 @@ func (handler *userHandler) CheckEmailAvailibility(c *gin.Context) {
 	}
 
 	response := helper.APIResponse("Email has been registered", http.StatusOK, "success", dataResponse)
+	c.JSON(http.StatusOK, response)
+	return
+}
+
+func (h *userHandler) UploadAvatar(c *gin.Context) {
+	file, err := c.FormFile("avatar")
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := helper.APIResponse("Failed to upload avatar image", http.StatusBadRequest, "error", data)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	userID := uuid.MustParse("5a4b0db3-4ed2-42c5-b283-e9e32aadef21")
+	path := fmt.Sprintf("images/%s-%s", userID, file.Filename)
+
+	err = c.SaveUploadedFile(file, path)
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := helper.APIResponse("Failed to upload avatar image", http.StatusBadRequest, "error", data)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	_, err = h.userService.SaveAvatar(userID, path)
+	if err != nil {
+		data := gin.H{"is_uploaded": false}
+		response := helper.APIResponse("Failed to upload avatar image", http.StatusBadRequest, "error", data)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	data := gin.H{"is_uploaded": true}
+	response := helper.APIResponse("Avatar successfully uploaded", http.StatusOK, "success", data)
+
 	c.JSON(http.StatusOK, response)
 	return
 }

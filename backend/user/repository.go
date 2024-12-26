@@ -3,12 +3,15 @@ package user
 import (
 	"errors"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type Repository interface {
 	Save(user User) (User, error)
 	FindByEmail(email string) (User, error)
+	FindByID(id uuid.UUID) (User, error)
+	Update(user User) (User, error)
 }
 
 type repository struct {
@@ -37,6 +40,32 @@ func (r *repository) FindByEmail(email string) (User, error) {
 	
 	if result.Error != nil {
 		return user, result.Error
+	}
+
+	return user, nil
+}
+
+func (r *repository) FindByID(id uuid.UUID) (User, error) {
+	var user User
+	result := r.db.Where("id = ?", id).Find(&user)
+	
+	if result.RowsAffected == 0 {
+		return user, errors.New("User Not Found")
+	}
+
+	if result.Error != nil {
+		return user, result.Error
+	}
+
+	return user, nil
+}
+
+func (r *repository) Update(user User) (User, error) {
+	err := r.db.Save(&user).Error
+	// err := r.db.Where("id = ?", user.ID).Updates(&user).Error
+	
+	if err != nil {
+		return user, err
 	}
 
 	return user, nil
