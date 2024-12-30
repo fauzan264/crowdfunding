@@ -1,8 +1,7 @@
 <script setup>
+    import { useRouter } from 'vue-router';
     const error = useError();
-    definePageMeta({
-        layout: 'success'
-    })
+    const router = useRouter();
 </script>
 
 <template>
@@ -14,7 +13,7 @@
             <h2 class="font-medium mb-3 text-3xl text-center">
                 Oops! Something went wrong.
             </h2>
-            <p class="text-center font-light" v-if="error?.statusCode === 404">
+            <p class="text-center font-light" v-if="error.statusCode === 404">
                 The page that you requested doesn't
                 <br />
                 exist at this moment
@@ -23,7 +22,7 @@
             <div class="mb-4 mt-6">
                 <div class="mb-3">
                     <button
-                        @click="$router.push({ path: '/' })"
+                        @click="router.push({ path: '/' })"
                         class="block w-full bg-orange-button hover:bg-green-button text-white font-semibold px-6 py-4 text-lg rounded-full"
                     >
                         Back to Home
