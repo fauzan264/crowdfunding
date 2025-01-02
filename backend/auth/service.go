@@ -1,7 +1,8 @@
 package auth
 
 import (
-	"fmt"
+	"errors"
+	"log"
 	"os"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -11,28 +12,33 @@ import (
 
 type Service interface {
 	GenerateToken(userID uuid.UUID) (string, error)
+	ValidateToken(encodedToken string) (*jwt.Token, error)
 }
 
 type jwtService struct {
+	secretKey []byte
 }
 
 func NewService() *jwtService {
-	return &jwtService{}
-}
-
-func (s *jwtService) GenerateToken(userID uuid.UUID) (string, error) {
 	err := godotenv.Load("../.env")
 	if err != nil {
 		// log.Fatal("Error loading .env file")
-		return "", err
+		log.Fatal("Error loading .env file:", err)
 	}
 
 	secret := os.Getenv("SECRET_KEY")
 	if secret == "" {
-		return "", fmt.Errorf("SECRET_KEY is not set in the environment variables")
+		log.Fatal("SECRET_KEY is not set in environment variables")
 	}
 
-	var secretKey = []byte(secret)
+	return &jwtService{
+		secretKey: []byte(secret),
+	}
+}
+
+func (s *jwtService) GenerateToken(userID uuid.UUID) (string, error) {
+
+	var secretKey = []byte(s.secretKey)
 	
 	claim := jwt.MapClaims{}
 	claim["user_id"] = userID
@@ -45,4 +51,22 @@ func (s *jwtService) GenerateToken(userID uuid.UUID) (string, error) {
 	}
 
 	return signedToken, nil
+}
+
+func (s *jwtService) ValidateToken(encodedToken string) (*jwt.Token, error) {
+	token, err := jwt.Parse(encodedToken, func(token *jwt.Token) (interface{}, error) {
+		_, ok := token.Method.(*jwt.SigningMethodHMAC)
+
+		if !ok {
+			return nil, errors.New("Invalid token")
+		}
+
+		return []byte(s.secretKey), nil
+	})
+
+	if err != nil {
+		return token, err
+	}
+
+	return token, nil
 }
