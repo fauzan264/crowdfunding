@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/fauzan264/crowdfunding/backend/auth"
 	"github.com/fauzan264/crowdfunding/backend/handler"
 	"github.com/fauzan264/crowdfunding/backend/helper"
 	"github.com/fauzan264/crowdfunding/backend/user"
@@ -35,7 +36,9 @@ func main() {
 
 	userRepository := user.NewRepository(db)
 	userService := user.NewService(userRepository)
-	userHandler := handler.NewUserHandler(userService)
+	authService := auth.NewService()
+
+	userHandler := handler.NewUserHandler(userService, authService)
 
 	router := gin.Default()
 	api := router.Group("/api/v1")
