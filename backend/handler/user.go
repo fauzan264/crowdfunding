@@ -3,7 +3,6 @@ package handler
 import (
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/fauzan264/crowdfunding/backend/helper"
@@ -28,7 +27,7 @@ func (h *userHandler) RegisterUser(c *gin.Context) {
 		errors := helper.FormatValidationError(err)
 		errorMessage := gin.H{"errors":errors}
 
-		response := helper.APIResponse("Register account failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		response := helper.APIResponse("Register account failed.", http.StatusUnprocessableEntity, "error", errorMessage)
 		c.JSON(http.StatusUnprocessableEntity, response)
 		return
 	}
@@ -56,7 +55,7 @@ func (h *userHandler) Login(c *gin.Context) {
 		errors := helper.FormatValidationError(err)
 		errorMessage := gin.H{"errors": errors}
 
-		response := helper.APIResponse("Login failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		response := helper.APIResponse("The data you sent is invalid.", http.StatusUnprocessableEntity, "error", errorMessage)
 		c.JSON(http.StatusUnprocessableEntity, response)
 		return
 	}
@@ -65,14 +64,14 @@ func (h *userHandler) Login(c *gin.Context) {
 	if err != nil {
 		errorMessage := gin.H{"errors": err.Error()}
 
-		response := helper.APIResponse("Login failed", http.StatusUnprocessableEntity, "error", errorMessage)
-		c.JSON(http.StatusUnprocessableEntity, response)
+		response := helper.APIResponse("Invalid credentials. Please check your username and password.", http.StatusUnauthorized, "error", errorMessage)
+		c.JSON(http.StatusUnauthorized, response)
 		return
 	}
 
 	formatter := user.FormatUser(loginUser, "tokentokentoken")
 
-	response := helper.APIResponse("Successfully login", http.StatusOK, "success", formatter)
+	response := helper.APIResponse("Login successful!", http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
 	return
 }
@@ -85,7 +84,7 @@ func (h *userHandler) CheckEmailAvailibility(c *gin.Context) {
 		errors := helper.FormatValidationError(err)
 		errorMessage := gin.H{"errors": errors}
 
-		response := helper.APIResponse("Email checking failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		response := helper.APIResponse("Email checking failed. The data you sent is invalid.", http.StatusUnprocessableEntity, "error", errorMessage)
 		c.JSON(http.StatusUnprocessableEntity, response)
 		return
 	}
@@ -98,7 +97,6 @@ func (h *userHandler) CheckEmailAvailibility(c *gin.Context) {
 	var userNotFound = errors.New("User Not Found")
 	if err != nil {
 		if err.Error() == userNotFound.Error() {
-			log.Println(err)
 			response := helper.APIResponse("Email is available", http.StatusOK, "success", dataResponse)
 			c.JSON(http.StatusOK, response)
 			return
@@ -120,7 +118,7 @@ func (h *userHandler) UploadAvatar(c *gin.Context) {
 	file, err := c.FormFile("avatar")
 	if err != nil {
 		data := gin.H{"is_uploaded": false}
-		response := helper.APIResponse("Failed to upload avatar image", http.StatusBadRequest, "error", data)
+		response := helper.APIResponse("Failed to upload avatar image.", http.StatusBadRequest, "error", data)
 
 		c.JSON(http.StatusBadRequest, response)
 		return
