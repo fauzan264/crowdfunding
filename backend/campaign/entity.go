@@ -20,12 +20,13 @@ type Campaign struct {
 	CreatedBy			uuid.UUID
 	CreatedAt			time.Time
 	UpdatedBy			uuid.UUID
-	UpdatedAt			uuid.UUID
+	UpdatedAt			time.Time
+	CampaignImages		[]CampaignImage
 }
 
-type CampaignImages struct {
+type CampaignImage struct {
 	ID 				uuid.UUID
-	CampaingID 		uuid.UUID
+	CampaignID 		uuid.UUID
 	FileName 		string
 	IsPrimary		int
 	CreatedBy 		uuid.UUID

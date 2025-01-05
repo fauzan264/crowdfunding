@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/fauzan264/crowdfunding/backend/auth"
+	"github.com/fauzan264/crowdfunding/backend/campaign"
 	"github.com/fauzan264/crowdfunding/backend/config"
 	"github.com/fauzan264/crowdfunding/backend/handler"
 	"github.com/fauzan264/crowdfunding/backend/helper"
@@ -26,6 +27,8 @@ func main() {
 	db := config.InitDatabase()
 
 	userRepository := user.NewRepository(db)
+	campaignRepository := campaign.NewRepository(db)
+	
 	userService := user.NewService(userRepository)
 	authService := auth.NewService()
 
