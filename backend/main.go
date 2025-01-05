@@ -30,8 +30,18 @@ func main() {
 	campaignRepository := campaign.NewRepository(db)
 	
 	userService := user.NewService(userRepository)
+	campaignService := campaign.NewService(campaignRepository)
 	authService := auth.NewService()
 
+	var userID uuid.UUID
+	if "" == "" {
+		userID = uuid.Nil
+	}
+
+	userID = uuid.MustParse("b1661415-1ecf-4111-9551-a59b99c02fa1")
+	getData, err := campaignService.FindCampaigns(userID)
+
+	log.Println(len(getData))
 	userHandler := handler.NewUserHandler(userService, authService)
 
 	router := gin.Default()
