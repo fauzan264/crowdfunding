@@ -9,11 +9,6 @@ import (
 	"github.com/google/uuid"
 )
 
-// tangkap parameter di handler
-// handler ke service
-// service yang menentukan repository mana yang di call
-// repository
-// db
 type campaignHandler struct {
 	campaignService campaign.Service
 }
@@ -22,7 +17,7 @@ func NewCampaignHandler(campaignService campaign.Service) *campaignHandler {
 	return &campaignHandler{campaignService}
 }
 
-func (h *campaignHandler) GetHandler(c *gin.Context) {
+func (h *campaignHandler) GetCampaigns(c *gin.Context) {
 	getUserID := c.Query("user_id")
 	
 	if getUserID == "" {
