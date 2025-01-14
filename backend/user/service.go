@@ -36,7 +36,6 @@ func(s *service) RegisterUser(input RegisterUserInput) (User, error) {
 	}
 
 	user.Password = string(passwordHash)
-	user.AvatarFileName = "images.jpg"
 	user.Role = "user"
 
 	userCreated, err := uuid.Parse("00000000-0000-0000-0000-000000000000")

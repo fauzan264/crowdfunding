@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users(
     occupation VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    avatar_file_name VARCHAR(255) NOT NULL,
+    avatar_file_name VARCHAR(255),
     role VARCHAR(255) NOT NULL,
     token VARCHAR(255),
     created_by CHAR(36) NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
