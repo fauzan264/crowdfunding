@@ -69,10 +69,10 @@ INSERT INTO status_transaction VALUES
 
 ALTER TABLE campaigns ADD CONSTRAINT fk_campaign_user FOREIGN KEY (user_id) REFERENCES users(id);
 
-ALTER TABLE campaign_images ADD CONSTRAINT fk_campaign_images_campaign FOREIGN KEY (campaign_id) REFERENCES campaigns(id);
-
 ALTER TABLE transactions ADD CONSTRAINT fk_transactions_user FOREIGN KEY (user_id) REFERENCES users(id);
 
 ALTER TABLE transactions ADD CONSTRAINT fk_transactions_campaign FOREIGN KEY (campaign_id) REFERENCES campaigns(id);
 
 ALTER TABLE transactions ADD CONSTRAINT fk_transactions_status FOREIGN KEY (status) REFERENCES status_transaction(name);
+
+ALTER TABLE campaign_images ADD CONSTRAINT UNIQUE(campaign_id, is_primary);
