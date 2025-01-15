@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/fauzan264/crowdfunding/backend/campaign"
@@ -40,6 +41,33 @@ func (h *campaignHandler) GetCampaigns(c *gin.Context) {
 	
 	formatter := campaign.FormatCampaigns(campaigns)
 	response := helper.APIResponse("List of campaigns", http.StatusOK, "success", formatter)
+	c.JSON(http.StatusOK, response)
+	return
+}
+
+func (h *campaignHandler) GetCampaign(c *gin.Context) {
+	// handler: mapping id yang di url ke struct input => service, call formatter
+	// service: inputnya struct input
+	// repository: get campaign by id
+	var input campaign.GetCampaignDetailInput
+
+	err := c.ShouldBindUri(&input)
+	log.Println(input)
+	if err != nil {
+		response := helper.APIResponse("Failed to get detail of campaign", http.StatusBadRequest, "error", err.Error())
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	
+	detailCampaign, err := h.campaignService.GetCampaignByID(input)
+	if err != nil {
+		response := helper.APIResponse("Failed to get detail of campaign", http.StatusBadRequest, "error", err.Error())
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	formatter := campaign.FormatDetailCampaign(detailCampaign)
+	response := helper.APIResponse("Campaign Detail", http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
 	return
 }

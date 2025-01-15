@@ -43,7 +43,7 @@ func AuthMiddleware(authService auth.Service, userService user.Service) gin.Hand
 			return
 		}
 
-		userID, err := uuid.Parse(claim["user_id"].(string))
+		userID, err := uuid.Parse(claim["sub"].(string))
 		if err != nil {
 			response := helper.APIResponse("Unauthorized", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)

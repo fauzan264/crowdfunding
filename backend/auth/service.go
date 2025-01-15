@@ -4,10 +4,10 @@ import (
 	"errors"
 	"log"
 	"os"
+	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
-	"github.com/joho/godotenv"
 )
 
 type Service interface {
@@ -20,11 +20,11 @@ type jwtService struct {
 }
 
 func NewService() *jwtService {
-	err := godotenv.Load("../.env")
-	if err != nil {
-		// log.Fatal("Error loading .env file")
-		log.Fatal("Error loading .env file:", err)
-	}
+	// err := godotenv.Load("../.env")
+	// if err != nil {
+	// 	// log.Fatal("Error loading .env file")
+	// 	log.Fatal("Error loading .env file:", err)
+	// }
 
 	secret := os.Getenv("SECRET_KEY")
 	if secret == "" {
@@ -40,8 +40,12 @@ func (s *jwtService) GenerateToken(userID uuid.UUID) (string, error) {
 
 	var secretKey = []byte(s.secretKey)
 	
-	claim := jwt.MapClaims{}
-	claim["user_id"] = userID
+	claim := jwt.MapClaims{
+		"sub": userID,
+		// "role": role, // role user
+		"iat": time.Now().Unix(), // Issued at (time of publication)
+		"exp": time.Now().Add(time.Hour).Unix(), // Expiration (1 hour from now)
+	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
 
