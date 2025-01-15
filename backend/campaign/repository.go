@@ -1,6 +1,8 @@
 package campaign
 
 import (
+	"errors"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -8,6 +10,7 @@ import (
 type Repository interface {
 	FindAll() ([]Campaign, error)
 	FindByUserID(userID uuid.UUID) ([]Campaign, error)
+	FindByID(ID uuid.UUID) (Campaign, error)
 }
 
 type repository struct {
@@ -40,4 +43,24 @@ func (r *repository) FindByUserID(userID uuid.UUID) ([]Campaign, error) {
 	}
 
 	return campaigns, nil
+}
+
+func (r *repository) FindByID(ID uuid.UUID) (Campaign, error) {
+	var campaign Campaign
+
+	result := r.db.Preload("User").
+				Preload("CampaignImages").
+				Where("id = ?", ID).
+				Order("campaigns.created_at ASC").
+				Find(&campaign)
+	
+	if result.RowsAffected == 0 {
+		return campaign, errors.New("Data Not Found")
+	}
+
+	if result.Error != nil {
+		return campaign, result.Error
+	}
+	
+	return campaign, nil
 }
