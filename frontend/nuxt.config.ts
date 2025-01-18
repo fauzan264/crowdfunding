@@ -31,4 +31,9 @@ export default defineNuxtConfig({
     },
   },
   pages: true,
+  runtimeConfig: {
+    public: {
+      apiBase: 'http://localhost:8080/api/v1',
+    },
+  },
 })
