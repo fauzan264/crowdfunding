@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/fauzan264/crowdfunding/backend/campaign"
 	"github.com/fauzan264/crowdfunding/backend/helper"
+	"github.com/fauzan264/crowdfunding/backend/user"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -46,13 +46,9 @@ func (h *campaignHandler) GetCampaigns(c *gin.Context) {
 }
 
 func (h *campaignHandler) GetCampaign(c *gin.Context) {
-	// handler: mapping id yang di url ke struct input => service, call formatter
-	// service: inputnya struct input
-	// repository: get campaign by id
 	var input campaign.GetCampaignDetailInput
 
 	err := c.ShouldBindUri(&input)
-	log.Println(input)
 	if err != nil {
 		response := helper.APIResponse("Failed to get detail of campaign", http.StatusBadRequest, "error", err.Error())
 		c.JSON(http.StatusBadRequest, response)
@@ -68,6 +64,36 @@ func (h *campaignHandler) GetCampaign(c *gin.Context) {
 
 	formatter := campaign.FormatDetailCampaign(detailCampaign)
 	response := helper.APIResponse("Campaign Detail", http.StatusOK, "success", formatter)
+	c.JSON(http.StatusOK, response)
+	return
+}
+
+func (h *campaignHandler) CreateCampaign(c *gin.Context) {
+	var input campaign.CreateCampaignInput
+
+	err := c.ShouldBindJSON(&input)
+	
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.APIResponse("Failed to create campaign", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	currentUser := c.MustGet("currentUser").(user.User)
+	input.User = currentUser
+
+	newCampaign, err := h.campaignService.CreateCampaign(input)
+	if err != nil {
+		response := helper.APIResponse("Failed to create campaign", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	formatter := campaign.FormatCampaign(newCampaign)
+	response := helper.APIResponse("Success to create campaign", http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
 	return
 }
