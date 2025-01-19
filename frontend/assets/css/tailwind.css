@@ -83,7 +83,7 @@ body {
 
 .card-project {
     transition: all .3s ease 0s, opacity .5s cubic-bezier(.5 0, 0, 1) 1ms;
-    max-height: 445px;
+    max-height: 485px;
     overflow: hidden;
 }
 
