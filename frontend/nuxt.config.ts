@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
+
   app: {
     head: {
       title: 'Build With Angga - Crowdfunding App',
@@ -21,19 +21,29 @@ export default defineNuxtConfig({
       script: [],
     },
   },
+
   css: [
     '@/assets/css/tailwind.css', // Add your Tailwind CSS here
-  ],  
+  ],
+
   postcss: {
     plugins: {
       tailwindcss: {},
       autoprefixer: {},
     },
   },
+
   pages: true,
+
   runtimeConfig: {
     public: {
-      apiBase: 'http://localhost:8080/api/v1',
+      apiBaseURL: 'http://localhost:8080/api/v1',
     },
   },
+
+  plugins: [
+    '~/plugins/auth.js'
+  ],
+
+  compatibilityDate: '2025-01-20'
 })
