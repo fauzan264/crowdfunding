@@ -2,11 +2,13 @@ import { Auth } from "@auth/core";
 
 export default defineNuxtPlugin(nuxtApp => {
     const config = useRuntimeConfig()
+    const storage = process.client ? localStorage : null;
 
-    const auth = new Auth({
+
+    const auth = Auth({
         baseUrl: config.public.apiBaseURL,
         tokenType: 'Bearer',
-        storage: localStorage,
+        storage,
 
         login: {
             url: '/sessions',
