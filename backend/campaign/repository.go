@@ -13,6 +13,8 @@ type Repository interface {
 	FindByID(ID uuid.UUID) (Campaign, error)
 	Save(campaign Campaign) (Campaign, error)
 	Update(campaign Campaign) (Campaign, error)
+	CreateImage(campaignImage CampaignImage) (CampaignImage, error)
+	MarkAllImagesAsNonPrimary(campaignID uuid.UUID) (bool, error)
 }
 
 type repository struct {
@@ -26,7 +28,9 @@ func NewRepository(db *gorm.DB) *repository {
 func (r *repository) FindAll() ([]Campaign, error) {
 	var campaigns []Campaign
 
-	err := r.db.Preload("CampaignImages", "campaign_images.is_primary = 1").Order("campaigns.created_at ASC").Find(&campaigns).Error
+	err := r.db.Preload("CampaignImages", "campaign_images.is_primary = 1").
+				Order("campaigns.created_at ASC").
+				Find(&campaigns).Error
 
 	if err != nil {
 		return campaigns, err
@@ -38,7 +42,10 @@ func (r *repository) FindAll() ([]Campaign, error) {
 func (r *repository) FindByUserID(userID uuid.UUID) ([]Campaign, error) {
 	var campaigns []Campaign
 
-	err := r.db.Where("user_id = ?", userID).Preload("CampaignImages", "campaign_images.is_primary = 1").Order("campaigns.updated_at ASC").Find(&campaigns).Error
+	err := r.db.Where("user_id = ?", userID).
+				Preload("CampaignImages", "campaign_images.is_primary = 1").
+				Order("campaigns.updated_at ASC").
+				Find(&campaigns).Error
 
 	if err != nil {
 		return campaigns, err
@@ -81,4 +88,30 @@ func (r *repository) Update(campaign Campaign) (Campaign, error) {
 	}
 
 	return campaign, nil
+}
+
+func (r *repository) CreateImage(campaignImage CampaignImage) (CampaignImage, error) {
+	if err := r.db.Create(&campaignImage).Error; err != nil {
+		return campaignImage, err
+	}
+
+	return campaignImage, nil
+}
+
+func (r *repository) MarkAllImagesAsNonPrimary(campaignID uuid.UUID) (bool, error) {
+	// updateData := map[string]interface{}{
+	// 	"is_primary": false,
+	// 	"updated_at": time.Now(),
+	// }
+
+	err := r.db.Model(&CampaignImage{}).
+				Where("campaign_id = ?", campaignID).
+				Update("is_primary", false).Error
+				// Updates(updateData).Error
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
