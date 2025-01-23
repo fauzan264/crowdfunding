@@ -7,6 +7,7 @@ import (
 	"github.com/fauzan264/crowdfunding/backend/handler"
 	"github.com/fauzan264/crowdfunding/backend/middleware"
 	"github.com/fauzan264/crowdfunding/backend/user"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -28,6 +29,7 @@ func main() {
 
 	// Initialize router
 	router := gin.Default()
+	router.Use(cors.Default())
 	router.Static("/images", "./images")
 	
 	api := router.Group("/api/v1")
