@@ -39,6 +39,7 @@ func main() {
 	api.POST("/sessions", userHandler.Login)
 	api.POST("/email_checkers", userHandler.CheckEmailAvailibility)
 	api.POST("/avatars", middleware.AuthMiddleware(authService, userService), userHandler.UploadAvatar)
+	api.GET("/users/fetch", middleware.AuthMiddleware(authService, userService), userHandler.FetchUser)
 
 	// Campaign-related routes
 	api.GET("/campaigns", campaignHandler.GetCampaigns)
