@@ -7,7 +7,7 @@ type UserFormatter struct {
 	Name 		string `json:"name"`
 	Occupation 	string `json:"occupation"`
 	Email 		string `json:"email"`
-	Token 		string `json:"token"`
+	Token 		string `json:"token,omitempty"`
 	ImageURL	string `json:"image_url"`
 }
 
