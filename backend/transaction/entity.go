@@ -3,6 +3,7 @@ package transaction
 import (
 	"time"
 
+	"github.com/fauzan264/crowdfunding/backend/campaign"
 	"github.com/fauzan264/crowdfunding/backend/user"
 	"github.com/google/uuid"
 )
@@ -15,6 +16,7 @@ type Transaction struct {
 	Status			string
 	Code			string
 	User			user.User
+	Campaign		campaign.Campaign
 	CreatedBy		uuid.UUID
 	CreatedAt		time.Time
 	UpdatedBy		uuid.UUID
