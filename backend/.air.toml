@@ -1,0 +1,16 @@
+[build]
+# Command to build your application. You can use "go run main.go" or "go build"
+cmd = "go run main.go"
+bin = "main"  # Output binary name
+
+# How long to wait before checking for file changes
+[watch]
+# Ignore these directories and files
+dirs = ["."]
+ignore = ["tmp", "vendor", ".git"]
+
+# How often to check for file changes (in seconds)
+interval = 1
+
+# List of file extensions to watch (you can modify based on your project needs)
+extensions = [".go", ".tpl", ".html", ".md"]
